@@ -1,16 +1,10 @@
-<<<<<<< Updated upstream
-=======
-#include <iostream>
->>>>>>> Stashed changes
 #include <stdio.h>
 
-int main(){
-    int n;
-
-    cout<<"masukkan jumlah baris: ";
+double f(double x){
+    return 2*x+1;
+        f(x)=x^2
+        
+}
     
-<<<<<<< Updated upstream
-}
-=======
-}
->>>>>>> Stashed changes
+
+
