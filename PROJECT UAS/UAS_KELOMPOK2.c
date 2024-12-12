@@ -20,12 +20,27 @@ struct barang{
 };
 typedef struct barang barang;
 
+typedef struct Box {
+    char namaBox[50];      // Nama Box
+    barang barang[10];     // Barang yang dimasukkan ke dalam Box, maksimal 10 barang per box
+    int jumlahBarang;      // Jumlah barang dalam box
+    struct Box* next;      // Pointer untuk linked list box
+} Box;
+
+typedef struct Stack {
+    Barang* box;             // Box yang disimpan di gudang
+    struct Stack* next;   // Pointer untuk stack
+} Stack;
+
 void tambahData(barang **head);
 void ubahData(barang **head);
 void hapusData(barang **head);
 void jumlahData(barang **head);
 void cariData(barang **head);
 void tampilData(barang **head);
+void push(Stack** stack, Box* box);
+Box* pop(Stack** stack);
+void tampilkanGudang(Stack* stack);
 
 // Fungsi untuk menghapus spasi di awal dan akhir string
 void trim(char *str) {
@@ -41,8 +56,9 @@ void trim(char *str) {
 
 
 int main(){
-
     barang *head = NULL;
+    barang* boxList = NULL;
+    Stack* gudang = NULL;
     int pilih;
     do
     {
@@ -171,3 +187,37 @@ void ubahData(barang **head){
 
 //========================================================
 // fungsi hapus data
+void push(Stack** stack, Box* box) {
+    Stack* baru = (Stack*)malloc(sizeof(Stack));
+    baru->box = box;
+    baru->next = *stack;
+    *stack = baru;
+}
+
+// Fungsi untuk mengambil box dari stack (Gudang)
+barang* pop(Stack** stack) {
+    if (*stack == NULL) {
+        printf("Gudang kosong!\n");
+        return NULL;
+    }
+    Stack* temp = *stack;
+    Box* box = temp->box;
+    *stack = (*stack)->next;
+    free(temp);
+    return box;
+}
+void tampilkanGudang(Stack* stack) {
+    if (stack == NULL) {
+        printf("Gudang kosong.\n");
+        return;
+    }
+    Stack* temp = stack;
+    while (temp != NULL) {
+        int totalBarang = 0;
+        for (int i = 0; i < temp->box->jumlahBarang; i++) {
+            totalBarang += temp->box->barang[i].jumlah;  // Menghitung jumlah barang
+        }
+        printf("Box: %s, Jumlah Barang: %d\n", temp->box->namaBox, totalBarang);
+        temp = temp->next;
+    }
+}
