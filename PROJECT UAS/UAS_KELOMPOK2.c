@@ -179,9 +179,9 @@ void tambahData(barang **head){
         pNew->kategori[i] = tolower(pNew->kategori[i]);
     }
     
-    printf("Masukkan harga barang: ");
+    printf("Masukkan harga barang (per box): ");
     scanf("%f", &pNew->harga);
-    printf("Masukkan jumlah stok barang:  ");
+    printf("Masukkan jumlah stok barang (per box):  ");
     scanf("%d", &pNew->stock);
 
 
@@ -229,10 +229,10 @@ void ubahData(barang **head){
                 PCur->kategori[i] = tolower(PCur->kategori[i]);
             }
 
-            printf("Masukkan harga barang baru: ");
+            printf("Masukkan harga barang (per box) baru: ");
             scanf("%f", &PCur->harga);
 
-            printf("Masukkan jumlah stok barang baru : ");
+            printf("Masukkan jumlah stok barang (per box)baru : ");
             scanf("%d", &PCur->stock);
 
             printf("Data berhasil diubah!\n");
@@ -286,6 +286,34 @@ void hapusData(barang **head){
     getch();
     
 }
+
+//========================================================
+// fungsi tampilkan data 
+
+void tampilData (barang **head){
+    if (*head == NULL)
+    {
+        printf("tidak ada data barang yang tersedia.\n");
+        getch();
+        return;
+    }
+
+    barang  *pCur = *head;
+    printf("daftar barang:\n");
+
+    while (pCur != NULL)
+    {
+        printf("Nama Barang : %s\n", pCur->namabarang);
+        printf("Kategori : %s\n", pCur->kategori);
+        printf("Harga Barang : %f\n", pCur->harga);
+        printf("Stok Barang : %d\n", pCur->stock);
+    }
+    
+getch();
+
+    
+}
+
 //========================================================
 //FUNGSI STACK 
 void push(Stack** stack, barang* box) {
