@@ -28,14 +28,26 @@
 
 
 //struktur untuk barang 
-struct barang{
+typedef struct barang{
     char namabarang[100];
     char kategori[50];
     float harga;
     int stock;
     struct barang *next; 
-};
-typedef struct barang barang;
+} barang;
+
+typedef struct transaksi{
+    barang* item;
+    int jumlah;
+    float totalprice;
+    int antrean;
+    struct transaksi* next;
+}transaksi;
+
+typedef struct queue{
+    transaksi* front;
+    transaksi* rear;
+}queue;
 
 typedef struct Stack {
     barang* box;             // Box yang disimpan di gudang
@@ -49,6 +61,8 @@ void tampilData(barang **head);
 void push(Stack** stack, barang* box);
 barang* pop(Stack** stack);
 void tampilkanGudang(Stack* stack);
+void enqueue(queue* q, barang* item, int jumlah);
+transaksi* dequeue(queue* q);
 
 // Fungsi untuk menghapus spasi di awal dan akhir string
 void trim(char *str) {
@@ -67,6 +81,8 @@ int main(){
     barang *head = NULL;
     barang* boxList = NULL;
     Stack* gudang = NULL;
+    queue* antrean = NULL;
+    initqueue(&antrean);
     int pilih;
     do
     {
@@ -76,9 +92,9 @@ int main(){
         printf("2. Pindah box ke gudang\n");
         printf("3. Transaksi\n");
 
-         printf("MASUKKAN PILIHAN (tekan 0 untuk keluar) : ");
-         fflush(stdin);
-         scanf("%d", &pilih);
+        printf("MASUKKAN PILIHAN (tekan 0 untuk keluar) : ");
+        fflush(stdin);
+        scanf("%d", &pilih);
 
         if (pilih == 1)
         {
@@ -94,14 +110,14 @@ int main(){
             scanf("%d", &pilihdatabarang);
             getchar();
 
-                if (pilih == 1)
-                    tambahData(&head);
-                else if (pilih == 2)
-                    ubahData(&head);
-                else if (pilih == 3)
-                    hapusData(&head);    
-                else if (pilih == 4)
-                    tampilData(&head);                     
+        if (pilih == 1)
+            tambahData(&head);
+            else if (pilih == 2)
+                ubahData(&head);
+            else if (pilih == 3)
+                hapusData(&head);
+            else if (pilih == 4)
+                tampilData(&head);
             } while (pilihdatabarang != 5);
         }
 
@@ -117,21 +133,21 @@ int main(){
             scanf("%d", &pilihpindahbarang);
             getchar();
 
-                if (pilih == 1)
-                    if (head != NULL) {
-                        push(&gudang, head); // Memindahkan barang ke gudang
-                        head = head->next;   // Menghapus barang dari daftar utama
-                    } else {
-                        printf("Tidak ada barang untuk dipindahkan ke gudang.\n");
-                    }
+            if (pilih == 1)
+                if (head != NULL) {
+                    push(&gudang, head); // Memindahkan barang ke gudang
+                    head = head->next;   // Menghapus barang dari daftar utama
+                } else {
+                    printf("Tidak ada barang untuk dipindahkan ke gudang.\n");
+                }
                 else if (pilih == 2)
                     tampilkanGudang(&head);                        
             } while (pilihpindahbarang != 3);
         }
-         
+        
         else if (pilih == 3)
         {
-            int pilihtransaksi;
+            int pilihantransaksi;
             do
             {
             printf("1. Tambah Transaksi\n");
@@ -142,13 +158,37 @@ int main(){
             printf("6. Kirim box dalam antrian\n");
             printf("7. Kembali ke menu utama\n");
             printf("Pilih menu (1-7): ");
-            scanf("%d", &pilihtransaksi);
+            scanf("%d", &pilihantransaksi);
             getchar();
-                       
-            } while (pilihtransaksi != 7);
+            switch (pilihantransaksi){
+                case 1: {
+                if(head ! = NULL){
+                    int jumlah;
+                    printf("Masaukkan Jumlah Barang Yang Dibeli: ");
+                    scanf("%d", &jumlah);
+                    enqueue(&antrean, head, jumlah);
+                }else {
+                    printf("tidak ada barang untuk ditransaksikan. \n");
+                } break;
+                }
+
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6: 
+                {
+                    transaksi* t = dequeue(&antrean);
+                    if(t != NULL){
+                        printf("Transaksi Ke-%d dengan barang %s (jumlah; %d, total:%.2f) telah diproses.\n", t->antrean, t->item->namabarang, t->jumlah, t->totalprice);
+                        free(t);
+                    }
+                }
+                break;
+            }
+            } while (pilihan != 7);
+            return 0;
         }
-
-
     } while (pilih != 0);
 
     return 0;
@@ -188,7 +228,7 @@ void tambahData(barang **head){
     pNew->next = *head;
     *head = pNew;
     printf("Data berhasil ditambahkan!\n");
-    getch();
+    getchar();
         
 }
 
@@ -274,7 +314,7 @@ void hapusData(barang **head){
 
             free(pCur);
             printf("barang berhasil dihapus!\n");
-            getch();
+            getchar();
             return;  
         }
 
@@ -283,7 +323,7 @@ void hapusData(barang **head){
     }
 
     printf("barang tidak ditemukan!\n");
-    getch();
+    getchar();
     
 }
 
@@ -294,7 +334,7 @@ void tampilData (barang **head){
     if (*head == NULL)
     {
         printf("tidak ada data barang yang tersedia.\n");
-        getch();
+        getchar();
         return;
     }
 
@@ -309,7 +349,7 @@ void tampilData (barang **head){
         printf("Stok Barang : %d\n", pCur->stock);
     }
     
-getch();
+getchar();
 
     
 }
@@ -353,3 +393,40 @@ void tampilkanGudang(Stack* stack) {
 
 //========================================================
 //FUNGSI QUEUE  
+void initqueue(queue** q){
+    *q = (queue*)malloc(sizeof(queue));
+    (*q)->front = NULL;
+    (*q)->rear = NULL;
+}
+
+void enqueue(queue* q, barang* item, int jumlah){
+    transaksi* t = (transaksi*) malloc(sizeof(transaksi));
+    t->item = item;
+    t->jumlah = jumlah;
+    t->totalprice = item->harga *jumlah;
+    t->antrean = (q->rear == NULL) ? 1 : (q->rear->antrean+1);
+    t->next = NULL;
+
+    if(q->rear == NULL){
+        q->front = t;
+        q->rear = t;
+    }else{
+        q->rear->next = t;
+        q->rear = t;
+    }
+    printf("Transaksi berhasil ditambahkan! anda berada di antrean ke-%d. \n", t->antrean);
+}
+
+transaksi* dequeue(queue* q) {
+    if(q->front == NULL) {
+        printf("Antrian Kosong!\n");
+        return 0;
+    }
+
+    transaksi* temp = q->front;
+    q->front = q->front->next;
+    if(q->front == NULL){
+        q->rear = NULL;
+    }
+    return temp;
+}
