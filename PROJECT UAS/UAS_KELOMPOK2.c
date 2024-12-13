@@ -14,7 +14,7 @@
 - tampil data digudang (display stack)
 3. menu transaksi
 - tambah transaksi
-- barang apa 
+- barang apa (buat supaya barangnya bisa lebih dari 1)
 - total harga berapa  (transaksi berhasil pop stack)
 - masuk dalam antrian ke berapa (menampilkan informasi dia antrean ke berapa) 
 
@@ -165,9 +165,9 @@ int main(){
             getchar();
             switch (pilihantransaksi){
                 case 1: {
-                if(head ! = NULL){
+                if(head != NULL){
                     int jumlah;
-                    printf("Masaukkan Jumlah Barang Yang Dibeli: ");
+                    printf("Masukkan Jumlah Barang Yang Dibeli: ");
                     scanf("%d", &jumlah);
                     enqueue(&antrean, head, jumlah);
                 }else {
@@ -203,7 +203,7 @@ int main(){
                 }
                 break;
             }
-            } while (pilihan != 7);
+            } while (pilihantransaksi != 7);
             return 0;
         }
     } while (pilih != 0);
