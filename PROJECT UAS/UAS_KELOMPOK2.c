@@ -64,7 +64,7 @@ void tampilkanGudang(Stack* stack);
 void enqueue(queue* q, barang* item, int jumlah);
 transaksi* dequeue(queue* q);
 void initqueue(queue** q);
-void tambahTransaksi(queue* barang, barang* head);
+void tambahTransaksi(queue* q, barang* head);
 void tampilkanAntrean(queue* q);
 void tampilkanAntreanPertama(queue* q);
 void tampilkanJumlahAntrean(queue* q);
@@ -168,7 +168,7 @@ int main(){
             getchar();
             switch (pilihantransaksi){
                 case 1: 
-                    tambahTransaksi(q, head);
+                    tambahTransaksi(antrean, head);
                     break;
                 case 2:
                     tampilkanAntrean(antrean);
@@ -183,8 +183,8 @@ int main(){
                 case 6: 
                     kirimBoxDalamAntrian(antrean);
                     break;
-            }
-            } while (pilihantransaksi != 7);
+                }
+            }while (pilihantransaksi != 7);
             return 0;
         }
     } while (pilih != 0);
@@ -439,14 +439,14 @@ void tambahTransaksi(queue* q, barang* head){
         scanf("%d", &jumlah);
         enqueue(q, head, jumlah);
     } else {
-        printf("Tidak ada barang untuk ditransaksikan.\n")
+        printf("Tidak ada barang untuk ditransaksikan.\n");
     }
 }
 
 // Fungsi untuk menampilkan antrean
 void tampilkanAntrean(queue* q) {
     system("cls");
-    if (q->front = NULL){
+    if (q->front == NULL){
         printf("Antrian Kosong.\n");
         return;
     }
@@ -489,7 +489,7 @@ void kirimBoxDalamAntrian(queue* q){
     system("cls");
     transaksi* t = dequeue(q);
     if (t != NULL){
-        printf("Transaksi ke-%d dengan barang %s (jumlah: &d, total: %.2f) telah diproses.\n",
+        printf("Transaksi ke-%d dengan barang %s (jumlah: %d, total: %.2f) telah diproses.\n",
                 t->antrean, t->item->namabarang, t->jumlah, t->totalprice);
         free(t);
     }
