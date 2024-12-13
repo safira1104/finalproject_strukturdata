@@ -63,6 +63,9 @@ barang* pop(Stack** stack);
 void tampilkanGudang(Stack* stack);
 void enqueue(queue* q, barang* item, int jumlah);
 transaksi* dequeue(queue* q);
+void initqueue(queue** q);
+void tampilkanAntrean(queue* q);
+void tampilkanAntreanPertama(queue* q);
 
 // Fungsi untuk menghapus spasi di awal dan akhir string
 void trim(char *str) {
@@ -173,9 +176,23 @@ int main(){
                 }
 
                 case 2:
+                    tampilkanAntrean(antrean);
+                    break;
                 case 3:
+                    tampilkanAntreanPertama(antrean);
+                    break;
                 case 4:
                 case 5:
+                {
+                    int count = 0;
+                    transaksi* temp = antrean->front;
+                    while(temp != NULL) {
+                        count++;
+                        temp = temp->next;
+                    }
+                    printf("Jumlah antrian: %d\n", count);
+                    break;
+                }
                 case 6: 
                 {
                     transaksi* t = dequeue(&antrean);
@@ -429,4 +446,32 @@ transaksi* dequeue(queue* q) {
         q->rear = NULL;
     }
     return temp;
+}
+
+//==================================================================================================
+// Fungsi untuk menampilkan antrean
+void tampilkanAntrean(queue* q) {
+    if (q->front = NULL){
+        printf("Antrian Kosong.\n");
+        return;
+    }
+
+    transaksi* temp = q->front;
+    printf("Daftar Antrean;\n");
+    while (temp != NULL){
+        printf("Antrean ke-%d: Barang: %s, Jumlah: %d, Total: %.2f\n",
+                temp->antrean, temp->item->namabarang, temp->jumlah, temp->totalprice);
+        temp = temp->next;
+    }
+}
+
+
+//Fungsi untuk menampilkan antrean pertama
+void tampilkanAntreanPertama(queue* q) {
+    if (q->front != NULL){
+        printf("Antrean Pertama : Barang; %s, Jumlah: %d, Total: %.2f\n",
+                q->front->item->namabarang, q->front->jumlah, q->front->totalprice);
+    } else {
+        printf("Antrian kosong.\n");
+    }
 }
