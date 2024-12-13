@@ -64,8 +64,11 @@ void tampilkanGudang(Stack* stack);
 void enqueue(queue* q, barang* item, int jumlah);
 transaksi* dequeue(queue* q);
 void initqueue(queue** q);
+void tambahTransaksi(queue* barang, barang* head);
 void tampilkanAntrean(queue* q);
 void tampilkanAntreanPertama(queue* q);
+void tampilkanJumlahAntrean(queue* q);
+void kirimBoxDalamAntrian(queue* q);
 
 // Fungsi untuk menghapus spasi di awal dan akhir string
 void trim(char *str) {
@@ -164,17 +167,9 @@ int main(){
             scanf("%d", &pilihantransaksi);
             getchar();
             switch (pilihantransaksi){
-                case 1: {
-                if(head != NULL){
-                    int jumlah;
-                    printf("Masukkan Jumlah Barang Yang Dibeli: ");
-                    scanf("%d", &jumlah);
-                    enqueue(&antrean, head, jumlah);
-                }else {
-                    printf("tidak ada barang untuk ditransaksikan. \n");
-                } break;
-                }
-
+                case 1: 
+                    tambahTransaksi(q, head);
+                    break;
                 case 2:
                     tampilkanAntrean(antrean);
                     break;
@@ -183,25 +178,11 @@ int main(){
                     break;
                 case 4:
                 case 5:
-                {
-                    int count = 0;
-                    transaksi* temp = antrean->front;
-                    while(temp != NULL) {
-                        count++;
-                        temp = temp->next;
-                    }
-                    printf("Jumlah antrian: %d\n", count);
+                    tampilkanJumlahAntrean(antrean);
                     break;
-                }
                 case 6: 
-                {
-                    transaksi* t = dequeue(&antrean);
-                    if(t != NULL){
-                        printf("Transaksi Ke-%d dengan barang %s (jumlah; %d, total:%.2f) telah diproses.\n", t->antrean, t->item->namabarang, t->jumlah, t->totalprice);
-                        free(t);
-                    }
-                }
-                break;
+                    kirimBoxDalamAntrian(antrean);
+                    break;
             }
             } while (pilihantransaksi != 7);
             return 0;
@@ -449,8 +430,22 @@ transaksi* dequeue(queue* q) {
 }
 
 //==================================================================================================
+//Fungsi untuk menambah Transaksi
+void tambahTransaksi(queue* q, barang* head){
+    system("cls");
+    if (head != NULL){
+        int jumlah;
+        printf("Masukkan Jumlah Barang yang Dibeli: ");
+        scanf("%d", &jumlah);
+        enqueue(q, head, jumlah);
+    } else {
+        printf("Tidak ada barang untuk ditransaksikan.\n")
+    }
+}
+
 // Fungsi untuk menampilkan antrean
 void tampilkanAntrean(queue* q) {
+    system("cls");
     if (q->front = NULL){
         printf("Antrian Kosong.\n");
         return;
@@ -468,10 +463,34 @@ void tampilkanAntrean(queue* q) {
 
 //Fungsi untuk menampilkan antrean pertama
 void tampilkanAntreanPertama(queue* q) {
+    system("cls");
     if (q->front != NULL){
         printf("Antrean Pertama : Barang; %s, Jumlah: %d, Total: %.2f\n",
                 q->front->item->namabarang, q->front->jumlah, q->front->totalprice);
     } else {
         printf("Antrian kosong.\n");
+    }
+}
+
+//Fungsi untuk menampilkan jumlah antrean
+void tampilkanJumlahAntrean(queue* q){
+    system("cls");
+    int count = 0;
+    transaksi* temp = q->front;
+    while (temp != NULL){
+        count++;
+        temp = temp->next;
+    }
+    printf("Jumlah antrian: %d\n", count);
+}
+
+//Fungsi untuk mengirim box dalam antrian
+void kirimBoxDalamAntrian(queue* q){
+    system("cls");
+    transaksi* t = dequeue(q);
+    if (t != NULL){
+        printf("Transaksi ke-%d dengan barang %s (jumlah: &d, total: %.2f) telah diproses.\n",
+                t->antrean, t->item->namabarang, t->jumlah, t->totalprice);
+        free(t);
     }
 }
