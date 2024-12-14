@@ -162,8 +162,8 @@ int main(){
             printf("4. Menampilkan antrian terakhir\n");
             printf("5. Menampilkan jumlah antrian\n");
             printf("6. Kirim box dalam antrian\n");
-            printf("7. Kembali ke menu utama\n");
-            printf("8. Tampilkan jumlah transaksi\n");
+            printf("7. Tampilkan jumlah transaksi\n");
+            printf("8. Kembali ke menu utama\n");
             printf("Pilih menu (1-8): ");
             scanf("%d", &pilihantransaksi);
             getchar();
@@ -187,27 +187,17 @@ int main(){
                     kirimBoxDalamAntrian(antrean);
                     break;
                 case 7:
-                    printf("Kembali ke menu utama.\n");
-                    break;
-                case 8:
                     tampilkanJumlahTransaksi(antrean);
                     break;
                 default:
                     printf("Pilihan tidak valid.\n");
                 }
-            } while (pilihantransaksi != 7);
+            } while (pilihantransaksi != 8);
             return 0;
         }
     } while (pilih != 0);
 
-    if (pilih == 0){
-        printf("Apakah anda yakin ingin keluar? (y/n): ");
-        char confirm;
-        scanf(" %c", &confirm);
-        if (confirm == 'y' || confirm == 'Y'){
-            break;
-        }
-    }
+    
     
 }
 
@@ -528,7 +518,7 @@ void tampilkanAntreanTerakhir(queue* q) {
     system("cls");
     if (q->rear = NULL) {
         printf("tidak ada antrean saat ini. \n");
-        return
+        return;
 }
 
     printf("antrean terakhir:\n");
