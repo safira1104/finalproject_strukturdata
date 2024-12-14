@@ -116,7 +116,7 @@ int main(){
             scanf("%d", &pilihdatabarang);
             getchar();
 
-        if (pilih == 1)
+        if (pilihdatabarang == 1)
             tambahData(&head);
             else if (pilih == 2)
                 ubahData(&head);
@@ -201,6 +201,19 @@ int main(){
     } while (pilih != 0);
 
     return 0;
+
+    if (pilihantransaksi < 1 || pilihantransaksi > 8){
+        printf("pilihan tidak valid. Silahkan pilih kembali.\n");
+        continue;
+    }
+    if (pilih == 0){
+        printf("Apakah anda yakin ingin keluar? (y/n): ");
+        char confirm;
+        scanf("%c", &confirm);
+        if (confirm == 'y' || confirm == 'Y'){
+            break;
+        }
+    }
     
 }
 
@@ -256,7 +269,7 @@ void ubahData(barang **head){
         nama[i] = tolower(nama[i]);
     }
 
-    barang *PCur = *head;
+    barang PCur = PCur->next;
     while (PCur != NULL){
         if (strcmp(PCur->namabarang, nama) == 0)
         {
@@ -350,7 +363,7 @@ void tampilData (barang **head){
     barang  *pCur = *head;
     printf("daftar barang:\n");
 
-    while (pCur != NULL)
+    while (pCur = pCur->next);
     {
         printf("Nama Barang : %s\n", pCur->namabarang);
         printf("Kategori : %s\n", pCur->kategori);
@@ -484,7 +497,7 @@ void tampilkanAntreanPertama(queue* q) {
 }
 
 //Fungsi untuk menampilkan jumlah antrean
-void tampilkanJumlahAntrean(queue* q){
+void tampilkanJumlahAntrean(queue* q) {
     system("cls");
     if (q->front == NULL){
         printf("Antrian kosong.\n");
@@ -500,7 +513,7 @@ void tampilkanJumlahAntrean(queue* q){
 }
 
 //Fungsi untuk mengirim box dalam antrian
-void kirimBoxDalamAntrian(queue* q){
+void kirimBoxDalamAntrian(queue* q) {
     system("cls");
     transaksi* t = dequeue(q);
     if (t != NULL){
@@ -511,18 +524,18 @@ void kirimBoxDalamAntrian(queue* q){
 }
 
 //Fungsi untuk menampilkan antrean terakhir
-void tampilkanAntreanTerakhir(queue* q){
+void tampilkanAntreanTerakhir(queue* q) {
     system("cls");
-    if (q->rear !=NULL){
+    if (q->rear != NULL) {
         printf("Antrean Terakhir: Barang: %s, Jumlah: %d, Total: %.2f\n",
-                q->rear->item->namabarang, q->rear->jumlah, q->rear->totalprice);
+               q->rear->item->namabarang, q->rear->jumlah, q->rear->totalprice);
     } else {
         printf("Antrian kosong.\n");
     }
 }
 
 //Fungsi untuk menampilkan jumlah transaksi
-void tampilkanJumlahTransaksi(queue* q){
+void tampilkanJumlahTransaksi(queue* q) {
     system("cls");
     if (q->front == NULL){
         printf("Tidak ada transaksi yang terjadi.\n")
