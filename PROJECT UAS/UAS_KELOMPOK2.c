@@ -195,21 +195,15 @@ int main(){
                 default:
                     printf("Pilihan tidak valid.\n");
                 }
-            }while (pilihantransaksi != 7);
+            } while (pilihantransaksi != 7);
             return 0;
         }
     } while (pilih != 0);
 
-    return 0;
-
-    if (pilihantransaksi < 1 || pilihantransaksi > 8){
-        printf("pilihan tidak valid. Silahkan pilih kembali.\n");
-        continue;
-    }
     if (pilih == 0){
         printf("Apakah anda yakin ingin keluar? (y/n): ");
         char confirm;
-        scanf("%c", &confirm);
+        scanf(" %c", &confirm);
         if (confirm == 'y' || confirm == 'Y'){
             break;
         }
