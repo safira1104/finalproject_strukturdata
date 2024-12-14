@@ -139,15 +139,15 @@ int main(){
             scanf("%d", &pilihpindahbarang);
             getchar();
 
-            if (pilih == 1)
+            if (pilihpindahbarang == 1)
                 if (head != NULL) {
                     push(&gudang, head); // Memindahkan barang ke gudang
                     head = head->next;   // Menghapus barang dari daftar utama
                 } else {
                     printf("Tidak ada barang untuk dipindahkan ke gudang.\n");
                 }
-                else if (pilih == 2)
-                    tampilkanGudang(&head);                        
+                else if (pilihpindahbarang == 2)
+                    tampilkanGudang(gudang);                        
             } while (pilihpindahbarang != 3);
         }
         
@@ -163,7 +163,8 @@ int main(){
             printf("5. Menampilkan jumlah antrian\n");
             printf("6. Kirim box dalam antrian\n");
             printf("7. Kembali ke menu utama\n");
-            printf("Pilih menu (1-7): ");
+            printf("8. Tampilkan jumlah transaksi\n");
+            printf("Pilih menu (1-8): ");
             scanf("%d", &pilihantransaksi);
             getchar();
             switch (pilihantransaksi){
@@ -177,12 +178,22 @@ int main(){
                     tampilkanAntreanPertama(antrean);
                     break;
                 case 4:
+                    tampilkanAntreanTerakhir(antrean);
+                    break;
                 case 5:
                     tampilkanJumlahAntrean(antrean);
                     break;
                 case 6: 
                     kirimBoxDalamAntrian(antrean);
                     break;
+                case 7:
+                    printf("Kembali ke menu utama.\n");
+                    break;
+                case 8:
+                    tampilkanJumlahTransaksi(antrean);
+                    break;
+                default:
+                    printf("Pilihan tidak valid.\n");
                 }
             }while (pilihantransaksi != 7);
             return 0;
@@ -475,6 +486,10 @@ void tampilkanAntreanPertama(queue* q) {
 //Fungsi untuk menampilkan jumlah antrean
 void tampilkanJumlahAntrean(queue* q){
     system("cls");
+    if (q->front == NULL){
+        printf("Antrian kosong.\n");
+        return;
+    }
     int count = 0;
     transaksi* temp = q->front;
     while (temp != NULL){
@@ -493,4 +508,34 @@ void kirimBoxDalamAntrian(queue* q){
                 t->antrean, t->item->namabarang, t->jumlah, t->totalprice);
         free(t);
     }
+}
+
+//Fungsi untuk menampilkan antrean terakhir
+void tampilkanAntreanTerakhir(queue* q){
+    system("cls");
+    if (q->rear !=NULL){
+        printf("Antrean Terakhir: Barang: %s, Jumlah: %d, Total: %.2f\n",
+                q->rear->item->namabarang, q->rear->jumlah, q->rear->totalprice);
+    } else {
+        printf("Antrian kosong.\n");
+    }
+}
+
+//Fungsi untuk menampilkan jumlah transaksi
+void tampilkanJumlahTransaksi(queue* q){
+    system("cls");
+    if (q->front == NULL){
+        printf("Tidak ada transaksi yang terjadi.\n")
+        return;
+    }
+    int count = 0; //Untuk menghitung jumlah total transaksi
+    transaksi* temp = q->front;
+
+    //Iterasi semua transaksi dalam antrean
+    while (temp != NULL){
+        count++;
+        temp = temp->next;
+    }
+    
+    printf("Jumlah transaksi yang terjadi: %d\n", count);
 }
