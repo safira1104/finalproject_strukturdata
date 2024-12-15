@@ -61,7 +61,7 @@ void ubahData(barang **head);
 void hapusData(barang **head);
 void tampilData(barang **head);
 
-void push(Stack** stack, barang* box);
+void push(Stack** gudang, barang* box);
 void pindahKeGudang(barang **head, Stack** gudang);
 void tampilkanGudang(Stack* stack);
 
@@ -404,36 +404,65 @@ void tampilData (barang **head) {
 //FUNGSI STACK (noval)
 //memasukkan barang yang telah diinput kegudang dengan push 
 
-void push(Stack** stack, barang* box) {
-    Stack* baru = (Stack*)malloc(sizeof(Stack));
-    baru->box = box;
-    baru->next = *stack;
-    *stack = baru;
+void push(Stack** gudang, barang* box) {
+    Stack* newNode = (Stack*)malloc(sizeof(Stack));
+    if (newNode == NULL) {
+        printf("Alokasi Memori Gagal!!\n");
+        return;
+    }
+    newNode->box = (barang*)malloc(sizeof(barang));
+    if (newNode->box == NULL) {
+        printf("Alokasi Memori Untuk Box Gagal!!\n");
+        free(newNode);
+        return;
+    }
+
+    strcpy(newNode->box->namabarang, box->namabarang);
+    strcpy(newNode->box->kategori, box->kategori);
+    newNode->box->harga = box->harga;
+    newNode->box->stock = box->stock;
+
+    newNode->next = *gudang;
+    *gudang = newNode;
+    
 }
 
 
 //========================================================
 //pindah box ke gudang (noval)
 
-void pindahKeGudang(barang **head, Stack** gudang);
+void pindahKeGudang(barang **head, Stack** gudang) {
+
+}
 //ISI DISINI
 
 //========================================================
 //menampilkan barang yang sudah dipindah ke gudang (noval)
 void tampilkanGudang(Stack* stack) {
+    system("cls");
+
     if (stack == NULL) {
         printf("Gudang kosong.\n");
+        printf("Tekan Enter untuk kembali ke menu...");
+        getchar();
         return;
     }
+
     Stack* temp = stack;
+    printf("Barang di gudang: \n");
     while (temp != NULL) {
-        int totalBarang = 0;
-        // for (int i = 0; i < temp->box->jumlahBarang; i++) {
-        //     totalBarang += temp->box->barang[i].jumlah;  // Menghitung jumlah barang
-        // }
-        printf("Box: %s, Jumlah Barang: %d\n", temp->box->namabarang, totalBarang);
+        //tampilkan barang yang ada di gudang
+        printf("=======================\n");
+        printf("Nama Barang : %s\n", temp->box->namabarang);
+        printf("Kategori    : %s\n", temp->box->kategori);
+        printf("Harga       : %.2f\n", temp->box->harga);
+        printf("Jumlah Stok : %d\n", temp->box->stock);
+        printf("=======================\n");
+        
         temp = temp->next;
     }
+    printf("Tekan Enter untuk kembali ke menu...");
+    getchar();
 }
 
 //========================================================
@@ -441,7 +470,7 @@ void tampilkanGudang(Stack* stack) {
 
 barang* pop(Stack** stack) {
     if (*stack == NULL) {
-        printf("Gudang kosong!\n");
+        printf("Gudang kosong!!\n");
         return NULL;
     }
     Stack* temp = *stack;
