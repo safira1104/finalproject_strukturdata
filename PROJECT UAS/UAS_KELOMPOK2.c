@@ -435,7 +435,7 @@ void initqueue(queue** q){
 //==================================================================================================
 //berlian
 
-void enqueue(queue* q, barang* item, int jumlah){
+void enqueue(queue* q, barang* item, int jumlah) {
     transaksi* t = (transaksi*) malloc(sizeof(transaksi));
     t->item = item;
     t->jumlah = jumlah;
@@ -443,7 +443,7 @@ void enqueue(queue* q, barang* item, int jumlah){
     t->antrean = (q->rear == NULL) ? 1 : (q->rear->antrean+1);
     t->next = NULL;
 
-    if(q->rear == NULL){
+    if(q->rear == NULL) {
         q->front = t;
     } else {
         q->rear->next = t;
@@ -455,16 +455,133 @@ void enqueue(queue* q, barang* item, int jumlah){
 //==================================================================================================
 // berlian
 //Fungsi untuk menambah Transaksi
-void tambahTransaksi(queue* q, barang* head){
+void tambahTransaksi(queue* q, Stack** gudang){
     system("cls");
-    if (head != NULL){
-        int jumlah;
-        printf("Masukkan Jumlah Barang yang Dibeli: ");
-        scanf("%d", &jumlah);
-        enqueue(q, head, jumlah);
-    } else {
-        printf("Tidak ada barang untuk ditransaksikan.\n");
+    if (*gudang == NULL) {
+        printf("Gudang kosong. Tidak dapat memproses transaksi. \n");
+        getchar();
+        return;
     }
+
+    int jumlahBarangDipilih = 0;
+    float totalHarga = 0.0;
+    barang* barangDipilih[100]; //maksimal 100 barang dipilih
+    int jumlah[100];
+
+    //menampilkan daftar barang yang tersedia digudang
+    printf("Daftar Barang Tersedia di Gudang:\n");
+    Stack* gudangTemp = *gudang;
+    int index = 0;
+    while (gudangTemp != NULL){
+        printf("%d. Nama Barang : %s\n", index + 1, gudangTemp->box->namaBarang);
+        printf("    Kategori    : %s\n", gudangTemp->box->kategori);
+        printf("    Harga       : %.2f\n", gudangTemp->box->harga);
+        printf("    Jumlah Stock: %d\n", gudangTemp->box->stock);
+        printf("-----------------------------\n");
+        gudangTemp = gudangTemp->next;
+        index++;
+    }
+
+    if (index == 0 ) {
+        printf("Tidak ada barang yang dapat dipilih.\n");
+        return;
+    }
+
+    //memilih barang dan jumlahnya
+    printf("Masukkan jumlah barang yang ingin dibeli: ");
+    scanf("%d", &jumlahBarangDipilih);
+    getchar(); //mengkonsumsi newline dari input sebelumnya
+
+    for (int i = 0; i < jumlahBarangDipilih; i++) {
+        char namaBarang[100];
+        int barangTersedia = 0;
+
+        while (1) {
+            printf("masukkan nama barang ke-%d: ", i + 1);
+            fgets(namaBarang, sizeof(namaBarang), stdin);
+            namaBarang[strcspn(namaBarang, "\n")] = 0;
+
+            //cek apakah barang ada di stack
+            gudangTemp = *gudang;
+            while (gudangTemp != NULL){
+                if (strcmp(gudangTemp->box->namaBarang, namaBarang) ==) {
+                    barangTersedia = 1;
+                    break;
+                }
+                gudangTemp = gudangTemp->next;
+            }
+
+            if (!barangTersedia) {
+                printf("Barang tidak tersedia, coba lagi.\n");
+            } else {
+                break;
+            }
+        }
+
+        //barang ditemukan, simpan ke dalam daftar barang
+        barangDipilih[i] = gudangTemp->box;
+        jumlah[i] = 1; //hanya satu barang yang dipilih
+        totalHarga += gudangTemp->box->harga;
+
+        //hapus barang dari stack
+        Stack* prev =  NULL;
+        gudangTemp = *gudang;
+        while (gudangTemp != NULL){
+            if (strcmp(gudangTemp->box->namaBarang, namaBarang) == 0) {
+                break;
+            }
+            prev = gudangTemp;
+            gudangTemp = gudangTemp->next;
+        }
+
+        if (prev != NULL) {
+            prev->next = gudangTemp->next;
+        } else {
+            *gudang = gudangTemp->next;
+        }
+        free(gudangTemp);
+    }
+
+    //membuat satu node transaksi untuk semua barang yang dipilih
+    transaksi* newTransaksi = (transaksi*)malloc(sizeof(transaksi));
+    newTransaksi->item = (barang*)malloc(sizeof(barang) * jumlahBarangDipilih); //alokasi array barang
+    for (int i = 0; i < jumlahBarangDipilih; i++){
+        newTransaksi->item[i] = *barangDipilih[i];
+    }
+
+    //validasi apakah ada barang yang dipilih dan jumlahnya lebih dari 0
+    if (jumlahBarangDipilih == 0) {
+        printf("Tidak ada barang yang dipilih. Transaksi batal.\n");
+        free(newTransaksi->item);
+        free(newTransaksi);
+        return;
+    }
+
+    newTransaksi->jumlah = jumlahBarangDipilih;
+    newTransaksi->totalprice = totalHarga;
+    newTransaksi->next = NULL;
+
+    //menghitung posisi antrean saat ini
+    int posisiAntrean = 1;
+    if (q->rear != NULL) {
+        posisiAntrean = q->rear->antrean + 1; //menentukan nomor antream berikutnya
+    }
+    newTransaksi->antrean = posisiAntrean; //set nomor antrean
+
+    //tambahkan transaksi ke antrean
+    if (q->rear == NULL) {
+        q->front = newTransaksi;
+    } else {
+        q->rear->next = newTransaksi;
+    }
+    q->rear = newTransaksi;
+
+    //menampilkan hasil transaksi
+    printf("\nTransaksi berhasil!\n");
+    printf("Total harga: %.2f\n", totalHarga);
+    printf("Transaksi telah dimasukkan ke dalam antrean pada posisi ke-%d.\n", posisiAntrean);
+    printf("Tekan Enter untuk kembali ke menu...");
+    getchar(); //tunggu sampai pengguna menekan Enter
 }
 
 
@@ -473,20 +590,24 @@ void tambahTransaksi(queue* q, barang* head){
 
 void tampilJumlahTransaksi(queue* q){
     system("cls");
-    if (q->front == NULL){
+    if (q->front == NULL) {
         printf("Tidak ada transaksi yang terjadi.\n");
+        printf("Tekan Enter untuk kembali ke menu..");
+        getchar(); //tunggu hingga pengguna menekan Enter
         return;
     }
     int count = 0; //Untuk menghitung jumlah total transaksi
     transaksi* temp = q->front;
 
     //Iterasi semua transaksi dalam antrean
-    while (temp != NULL){
+    while (temp != NULL) {
         count++;
         temp = temp->next;
     }
     
     printf("Jumlah transaksi yang terjadi: %d\n", count);
+    printf("Tekan Enter untuk kembali ke menu...");
+    getchar(); //tunggu hingga pengguna menekan Enter
 }
 
 
