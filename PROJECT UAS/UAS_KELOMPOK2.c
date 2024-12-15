@@ -432,9 +432,54 @@ void push(Stack** gudang, barang* box) {
 //pindah box ke gudang (noval)
 
 void pindahKeGudang(barang **head, Stack** gudang) {
+    system("cls");
+    if(*head != NULL) {
+        printf("Daftar Barang Yang Tersedia: \n");
+        printf("Daftar nama barang yang tersedia: \n");
+        barang *pCur = *head; //ini adalah deklarasi var.pCur
+        while (pCur != NULL) {
+            printf("-Kosong- %s\n", pCur->namabarang);
+            pCur = pCur->next;
+        }
+        printf("===============================\n");
 
+        //Menanyakan barang mana yang akan dipindahkan
+        char nama[100];
+        printf("Masukkan nama barang yang akan dipindahkan ke gudang: ");
+        fflush(stdin);
+        fgets(nama, sizeof(nama), stdin);
+        nama[strcspn(nama, "\n")] = '\0';
+
+        pCur = *head;
+        barang* prev = NULL;
+
+        //cari barang sesuai nama
+        while (pCur != NULL) {
+            if (strcmp(pCur->namabarang, nama) == 0) {
+                //barang ketemu
+                push(gudang, pCur);
+
+                if (prev == NULL) {
+                    *head = pCur->next;
+                }else {
+                    prev->next = pCur->next;
+                }
+                free(pCur);
+                printf("Yess! Barang berhasil dipindahkan ke gudang.\n");
+                getchar();
+                return();
+            }
+            prev = pCur;
+            pCur = pCur->next;
+        }
+        printf("Barang dengan nama '%s' tidak ditemukan!\n", nama);
+        getchar();
+    } else {
+        printf("Tidak ada barang untuk dipindahkan ke gudang.\n");
+        getchar();
+    }
 }
-//ISI DISINI
+
 
 //========================================================
 //menampilkan barang yang sudah dipindah ke gudang (noval)
