@@ -136,13 +136,13 @@ int main(){
             scanf("%d", &pilihdatabarang);
             getchar();
 
-        if (pilihdatabarang == 1)
-            tambahData(&head);
-            else if (pilih == 2)
+            if (pilihdatabarang == 1)
+                tambahData(&head);
+            else if (pilihdatabarang == 2)
                 ubahData(&head);
-            else if (pilih == 3)
+            else if (pilihdatabarang == 3)
                 hapusData(&head);
-            else if (pilih == 4)
+            else if (pilihdatabarang == 4)
                 tampilData(&head);
             } while (pilihdatabarang != 5);
         }
@@ -209,119 +209,177 @@ int main(){
 }
 
 //========================================================
-// fungsi tambah data (safira)
+// fungsi tambah data 
 void tambahData(barang **head){
     barang *pNew = (barang *)malloc(sizeof(barang));
     system("cls");
 
     printf("Masukkan nama barang: ");
     fflush(stdin);
-    gets(pNew->namabarang);
+    fgets(pNew->namabarang, sizeof(pNew->namabarang), stdin);
     trim(pNew->namabarang);
-    for (int i = 0; pNew->namabarang[i]; i++)
-    {
+    if (strlen(pNew->namabarang) == 0) {
+        printf("Nama barang tidak boleh kosong!\n");
+        free(pNew);
+        return;
+    }
+    for (int i = 0; pNew->namabarang[i] != '\0'; i++){
         pNew->namabarang[i] = tolower(pNew->namabarang[i]);
     }
 
     printf("Masukkan kategori barang: ");
     fflush(stdin);
-    gets(pNew->kategori);
+    fgets(pNew->kategori, sizeof(pNew->kategori), stdin);
     trim(pNew->kategori);
-    for (int i = 0; pNew->kategori; i++)
-    {
+    if (strlen(pNew->kategori) == 0) {
+        printf("Kategori tidak boleh kosong!\n");
+        free(pNew);
+        return;
+    }
+    for (int i = 0; pNew->kategori[i] != '\0'; i++) {
         pNew->kategori[i] = tolower(pNew->kategori[i]);
     }
     
     printf("Masukkan harga barang (per box): ");
-    scanf("%f", &pNew->harga);
+    if (scanf("%f", &pNew->harga) != 1) {
+        printf("Input harga tidak valid\n");
+        free(pNew);
+        return;
+    }
+    
     printf("Masukkan jumlah stok barang (per box):  ");
-    scanf("%d", &pNew->stock);
-
+    if (scanf("%d", &pNew->stock) != 1) {
+        printf("Input stok tidak valid\n");
+        free(pNew);
+        return;
+    }
+    
 
     pNew->next = *head;
     *head = pNew;
+
     printf("Data berhasil ditambahkan!\n");
     getchar();
         
 }
 
 //========================================================
-// fungsi ubah data (safira)
+// fungsi ubah data 
 void ubahData(barang **head){
     char nama[100];
     barang *PCur = *head;
 
     system("cls");
+
+    //Tampilkan daftra nama yang tersedia
+    printf("Daftar nama barang yang tersedia:\n");
+    while (PCur != NULL) {
+        printf("- %s\n", PCur->namabarang);
+        PCur = PCur->next;
+    }
+    printf("--------------------------\n");
+    
     printf("masukkan nama barang yang akan diubah: ");
     fflush(stdin);
     fgets(nama, sizeof(nama), stdin);
     nama[strcspn(nama, "\n")] = '\0';
     trim(nama);
 
-    for (int i = 0; nama[i]; i++)
-    {
+    for (int i = 0; nama[i]; i++) {
         nama[i] = tolower(nama[i]);
     }
 
-    barang PCur = PCur->next;
+    PCur = *head;
     while (PCur != NULL){
-        if (strcmp(PCur->namabarang, nama) == 0)
-        {
-            printf("Masukkan nama barang baru: ");
+        if (strcmp(PCur->namabarang, nama) == 0) {
+            printf("Barang ditemukan: %s\n", PCur->namabarang);
+
+            //mengubah nama barang baru, jika tidak ada input maka akan menggunakan data lama 
+            char input[100];
+            printf("Masukkan nama barang baru (kosongkan untuk tetap menggunakan nama '%s'): ", PCur->namabarang);
             fflush(stdin);
-            gets(PCur->namabarang);
-            trim(PCur->namabarang);
-            for (int i = 0; PCur->namabarang[i]; i++)
-            {
-                PCur->namabarang[i] = tolower(PCur->namabarang[i]);
+            fgets(input, sizeof(input), stdin);
+            input[strcspn(input, "\n")] = '\0';
+            trim(input);
+
+            if (strlen(input) > 0) {
+                strcpy(PCur->namabarang, input);
+                for (int i = 0; PCur->namabarang[i]; i++) {
+                    PCur->namabarang[i] = tolower(PCur->namabarang[i]);
+                }
             }
             
-            printf("Masukkan kategori barang baru: ");
-            fflush(stdin);
-            gets(PCur->kategori);
-            trim(PCur->kategori);
-            for (int i = 0; PCur->kategori[i]; i++)
-            {
-                PCur->kategori[i] = tolower(PCur->kategori[i]);
+            // Mengubah kategori barang baru, jika tidak ada input maka tetap menggunakan kategori lama
+            printf("Masukkan kategori barang baru (kosongkan untuk tetap menggunakan kategori '%s'): ", PCur->kategori);
+            fgets(input, sizeof(input), stdin);
+            input[strcspn(input, "\n")] = '\0';
+            trim(input);
+
+            if (strlen(input) > 0) {
+                strcpy(PCur->kategori, input);
+                for (int i = 0; PCur->kategori[i]; i++) {
+                    PCur->kategori[i] = tolower(PCur->kategori[i]);
+                }
             }
 
-            printf("Masukkan harga barang (per box) baru: ");
-            scanf("%f", &PCur->harga);
+            printf("Masukkan harga barang baru (kosongkan untuk tetap menggunakan kategori %.2f): ", PCur->harga);
+            fgets(input, sizeof(input), stdin);
+            input[strcspn(input, "\n")] = '\0';
 
-            printf("Masukkan jumlah stok barang (per box)baru : ");
-            scanf("%d", &PCur->stock);
+            if (strlen(input) > 0) {
+                PCur->harga = atof(input);
+            }
+            
+
+            printf("Masukkan jumlah stok barang  (kosongkan untuk tetap menggunakan kategori %d): ", PCur->stock);
+            fgets(input, sizeof(input), stdin);
+            input[strcspn(input, "\n")] = '\0';
+
+            if (strlen(input) > 0) {
+                PCur->harga = atoi(input);
+            }
 
             printf("Data berhasil diubah!\n");
             getch();
             return;
         }
 
-        printf("Data tidak ditemukan!\n");
-        getch();
-        
+        PCur = PCur->next;
     }  
+
+    printf("Data tidak ditemukan!\n");
+    getch();
 }
 
 //========================================================
-// fungsi hapus data //safira
+// fungsi hapus data 
 
 void hapusData(barang **head){
     char nama[100];
+    barang *pCur = *head;
+
     system("cls");
 
-    printf("Masukkan nama barang akan dihapus: ");
+    printf("Masukkan nama barang yang tersedia:\n");
+    while (pCur != NULL) {
+        printf("- %s\n", pCur->namabarang);
+        pCur = pCur->next;
+    }
+    printf("--------------------------\n");
+
+
+    printf("Masukkan nama barang yang akan dihapus: ");
     fflush(stdin);
     fgets(nama, sizeof(nama), stdin);
     nama[strcspn(nama, "\n")] = '\0';
     trim(nama);
 
-    barang *pCur = *head;
+    pCur = *head;
     barang *ppre = NULL;
 
     while (pCur != NULL)
     {
-        if (strcmp(pCur->namabarang, nama) == 0)            
-        {
+        if (strcmp(pCur->namabarang, nama) == 0) {
             if (ppre == NULL)
             {
                 *head = pCur->next;
@@ -345,7 +403,7 @@ void hapusData(barang **head){
 }
 
 //========================================================
-// fungsi tampilkan data (lucky)
+// fungsi tampilkan data
 
 void tampilData (barang **head) {
 
@@ -401,7 +459,6 @@ void tampilData (barang **head) {
 }
 
 //========================================================
-//FUNGSI STACK (noval)
 //memasukkan barang yang telah diinput kegudang dengan push 
 
 void push(Stack** gudang, barang* box) {
@@ -429,19 +486,20 @@ void push(Stack** gudang, barang* box) {
 
 
 //========================================================
-//pindah box ke gudang (noval)
+//pindah box ke gudang 
 
 void pindahKeGudang(barang **head, Stack** gudang) {
     system("cls");
     if(*head != NULL) {
         printf("Daftar Barang Yang Tersedia: \n");
+
         printf("Daftar nama barang yang tersedia: \n");
         barang *pCur = *head; //ini adalah deklarasi var.pCur
         while (pCur != NULL) {
-            printf("-Kosong- %s\n", pCur->namabarang);
+            printf("- %s\n", pCur->namabarang);
             pCur = pCur->next;
         }
-        printf("===============================\n");
+        printf("--------------------------\n");
 
         //Menanyakan barang mana yang akan dipindahkan
         char nama[100];
@@ -467,7 +525,7 @@ void pindahKeGudang(barang **head, Stack** gudang) {
                 free(pCur);
                 printf("Yess! Barang berhasil dipindahkan ke gudang.\n");
                 getchar();
-                return();
+                return;
             }
             prev = pCur;
             pCur = pCur->next;
@@ -482,7 +540,7 @@ void pindahKeGudang(barang **head, Stack** gudang) {
 
 
 //========================================================
-//menampilkan barang yang sudah dipindah ke gudang (noval)
+//menampilkan barang yang sudah dipindah ke gudang 
 void tampilkanGudang(Stack* stack) {
     system("cls");
 
@@ -502,7 +560,7 @@ void tampilkanGudang(Stack* stack) {
         printf("Kategori    : %s\n", temp->box->kategori);
         printf("Harga       : %.2f\n", temp->box->harga);
         printf("Jumlah Stok : %d\n", temp->box->stock);
-        printf("=======================\n");
+        printf("----------------------\n");
         
         temp = temp->next;
     }
@@ -511,7 +569,7 @@ void tampilkanGudang(Stack* stack) {
 }
 
 //========================================================
-// Fungsi untuk mengambil barang dari gudang (stack) (noval)
+// Fungsi untuk mengambil barang dari gudang (stack) 
 
 barang* pop(Stack** stack) {
     if (*stack == NULL) {
@@ -529,7 +587,7 @@ barang* pop(Stack** stack) {
 //FUNGSI QUEUE  //lucky
 
 void initqueue(queue** q) {
-    *q = (*queue)malloc(sizeof(queue));
+    *q = (queue*)malloc(sizeof(queue));
     if (*q == NULL) {
         printf("Gagal mengalokasikan memori untuk antrean.\n");
         exit(1); //Keluar dari program jika alokasi gagal
@@ -539,7 +597,7 @@ void initqueue(queue** q) {
 }
 
 //==================================================================================================
-//berlian
+
 
 void enqueue(queue* q, barang* item, int jumlah) {
     transaksi* t = (transaksi*) malloc(sizeof(transaksi));
@@ -559,7 +617,6 @@ void enqueue(queue* q, barang* item, int jumlah) {
 }
 
 //==================================================================================================
-// berlian
 //Fungsi untuk menambah Transaksi
 void tambahTransaksi(queue* q, Stack** gudang){
     system("cls");
@@ -579,7 +636,7 @@ void tambahTransaksi(queue* q, Stack** gudang){
     Stack* gudangTemp = *gudang;
     int index = 0;
     while (gudangTemp != NULL){
-        printf("%d. Nama Barang : %s\n", index + 1, gudangTemp->box->namaBarang);
+        printf("%d. Nama Barang : %s\n", index + 1, gudangTemp->box->namabarang);
         printf("    Kategori    : %s\n", gudangTemp->box->kategori);
         printf("    Harga       : %.2f\n", gudangTemp->box->harga);
         printf("    Jumlah Stock: %d\n", gudangTemp->box->stock);
@@ -610,7 +667,7 @@ void tambahTransaksi(queue* q, Stack** gudang){
             //cek apakah barang ada di stack
             gudangTemp = *gudang;
             while (gudangTemp != NULL){
-                if (strcmp(gudangTemp->box->namaBarang, namaBarang) ==) {
+                if (strcmp(gudangTemp->box->namabarang, namaBarang) == 0) {
                     barangTersedia = 1;
                     break;
                 }
@@ -633,7 +690,7 @@ void tambahTransaksi(queue* q, Stack** gudang){
         Stack* prev =  NULL;
         gudangTemp = *gudang;
         while (gudangTemp != NULL){
-            if (strcmp(gudangTemp->box->namaBarang, namaBarang) == 0) {
+            if (strcmp(gudangTemp->box->namabarang, namaBarang) == 0) {
                 break;
             }
             prev = gudangTemp;
@@ -692,7 +749,7 @@ void tambahTransaksi(queue* q, Stack** gudang){
 
 
 //==================================================================================================
-// Fungsi untuk menampilkan jumlah transaksi //berlian
+// Fungsi untuk menampilkan jumlah transaksi 
 
 void tampilJumlahTransaksi(queue* q){
     system("cls");
@@ -718,7 +775,7 @@ void tampilJumlahTransaksi(queue* q){
 
 
 //==================================================================================================
-// Fungsi untuk menampilkan antrean //lucky
+// Fungsi untuk menampilkan antrean 
 
 void tampilkanAntrean(queue* q) {
     system("cls");
@@ -735,7 +792,7 @@ void tampilkanAntrean(queue* q) {
 
         // Validasi data barang untuk mencegah error
         if (temp->item != NULL){
-            printf("    Barang  :\n");
+            printf("  Barang  :\n");
             for (int i = 0; i < temp->jumlah; i++){ //Loop untuk menampilkan semua barang
                 if (temp->item[i].namabarang != NULL) {
                     printf("    - %s\n", temp->item[i].namabarang);
@@ -759,7 +816,7 @@ void tampilkanAntrean(queue* q) {
 
 
 //==================================================================================================
-//Fungsi untuk menampilkan antrean pertama //lucky
+//Fungsi untuk menampilkan antrean pertama 
 
 void tampilkanAntreanPertama(queue* q) {
     system("cls");
@@ -769,7 +826,7 @@ void tampilkanAntreanPertama(queue* q) {
 
         //Validasi data barang
         if (q->front->item != NULL) {
-            printf("    Barang  :\n");
+            printf("  Barang  :\n");
             for (int i = 0; i < q->front->jumlah; i++) {
                 if (q->front->item[i].namabarang != NULL) {
                     printf("    - %s\n", q->front->item[i].namabarang); 
@@ -782,9 +839,9 @@ void tampilkanAntreanPertama(queue* q) {
         } else {
             printf("    Data barang tidak valid.\n");
         }
-        printf("=======================================")
+        printf("=================================\n");
     } else {
-        printf("Antrian kosong.\n")
+        printf("Antrian kosong.\n");
     }
 
     printf("Tekan Enter untuk kembali ke menu...");
@@ -792,7 +849,6 @@ void tampilkanAntreanPertama(queue* q) {
 }
 
 //==================================================================================================
-//steven
 //Fungsi untuk menampilkan antrean terakhir
 
 void tampilkanAntreanTerakhir(queue* q) {
@@ -822,7 +878,6 @@ void tampilkanAntreanTerakhir(queue* q) {
 
 
 //==================================================================================================
-//steven
 //Fungsi untuk menampilkan jumlah antrean
 
 void tampilkanJumlahAntrean(queue* q) {
@@ -849,7 +904,7 @@ void tampilkanJumlahAntrean(queue* q) {
 
 
 //==================================================================================================
-//steven
+
 transaksi* dequeue(queue* q) {
     if (q->front == NULL) {
         printf("Antrian Kosong!\n");
@@ -867,7 +922,7 @@ transaksi* dequeue(queue* q) {
 }
 
 //==================================================================================================
-//steven
+
 // Fungsi untuk mengirim box dalam antrian
 void kirimBoxDalamAntrian(queue* q) {
     system("cls");
@@ -877,9 +932,6 @@ void kirimBoxDalamAntrian(queue* q) {
     if (t != NULL) {
         printf("Transaksi ke-%d dengan barang %s (jumlah: %d, total: %.2f) telah diproses.\n",
                 t->antrean, t->item->namabarang, t->jumlah, t->totalprice);
-
-        // Proses lain jika diperlukan, misalnya pengurangan stok barang di gudang
-        // Misalnya, jika Anda ingin mengurangi stok barang di gudang, lakukan di sini
 
         // Hapus transaksi dari antrean
         free(t);  // Bebaskan memori transaksi yang telah diproses
