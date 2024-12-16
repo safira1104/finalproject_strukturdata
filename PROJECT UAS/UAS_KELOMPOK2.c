@@ -127,7 +127,7 @@ int main(){
             {
             
             system("cls");
-            printf("1. tambah Data Barang\n");
+            printf("1. Tambah Data Barang\n");
             printf("2. Ubah Data Barang\n");
             printf("3. Hapus Data Barang\n");
             printf("4. Tampil Data Barang\n");
@@ -154,7 +154,7 @@ int main(){
             {
             
             system("cls");
-            printf("1. pindah box ke gudang\n");
+            printf("1. Pindah box ke gudang\n");
             printf("2. Tampil data box di gudang \n");
             printf("3. Kembali ke Menu Utama\n");
             printf("Pilih menu (1-3): ");
