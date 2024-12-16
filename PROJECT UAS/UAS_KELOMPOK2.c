@@ -792,39 +792,59 @@ void tampilkanAntreanPertama(queue* q) {
 }
 
 //==================================================================================================
-//Fungsi untuk menampilkan antrean terakhir //steven
+//steven
+//Fungsi untuk menampilkan antrean terakhir
 
 void tampilkanAntreanTerakhir(queue* q) {
     system("cls");
-    if (q->rear = NULL) {
-        printf("tidak ada antrean saat ini. \n");
-        return;
-}
 
-    printf("antrean terakhir:\n");
-    printf("barang: %s\n", q->rear->item->namabarang);
-    printf("jumlah: %d\n, q->rear->jumlah");
-    printf("total harga: %.2f\n", q->rear->totalprice);
-    printf("nomor antrean: %d\n, q->rear->antrean");
+    // Periksa apakah antrean kosong
+    if (q->rear == NULL) {
+        printf("Tidak ada antrean saat ini.\n");
+        getchar(); // Ganti getch() dengan getchar()
+        return; // Pastikan fungsi keluar jika antrean kosong
+    }
 
+    // Pastikan data valid sebelum menampilkan
+    if (q->rear->item != NULL) {
+        printf("Antrean terakhir:\n");
+        printf("Barang      : %s\n", q->rear->item->namabarang);
+        printf("Jumlah      : %d\n", q->rear->jumlah);
+        printf("Total Harga : %.2f\n", q->rear->totalprice);
+        printf("Nomor Antrean : %d\n", q->rear->antrean);
+    } else {
+        printf("Data transaksi terakhir tidak valid.\n");
+    }
+
+    printf("Tekan Enter untuk kembali ke menu...");
+    getchar(); // Tunggu hingga pengguna menekan Enter
 }
 
 
 //==================================================================================================
-//Fungsi untuk menampilkan jumlah antrean //steven
+//steven
+//Fungsi untuk menampilkan jumlah antrean
+
 void tampilkanJumlahAntrean(queue* q) {
     system("cls");
-    if (q->front == NULL){
+    if (q->front == NULL) {
         printf("Antrian kosong.\n");
+        getchar();  // Menggunakan getchar() agar program menunggu input Enter
         return;
     }
+    
     int count = 0;
     transaksi* temp = q->front;
-    while (temp != NULL){
+
+    // Menghitung jumlah antrean dengan melintasi seluruh antrean
+    while (temp != NULL) {
         count++;
         temp = temp->next;
     }
+
     printf("Jumlah antrian: %d\n", count);
+    printf("Tekan Enter untuk kembali ke menu...");
+    getchar();  // Menunggu input Enter agar pengguna bisa melihat jumlah antrean
 }
 
 
@@ -847,14 +867,26 @@ transaksi* dequeue(queue* q) {
 }
 
 //==================================================================================================
-// Fungsi untuk mengirim box dalam antrian
 //steven
+// Fungsi untuk mengirim box dalam antrian
 void kirimBoxDalamAntrian(queue* q) {
     system("cls");
+
+    // Mengambil transaksi pertama dari antrean
     transaksi* t = dequeue(q);
-    if (t != NULL){
+    if (t != NULL) {
         printf("Transaksi ke-%d dengan barang %s (jumlah: %d, total: %.2f) telah diproses.\n",
                 t->antrean, t->item->namabarang, t->jumlah, t->totalprice);
-        free(t);
+
+        // Proses lain jika diperlukan, misalnya pengurangan stok barang di gudang
+        // Misalnya, jika Anda ingin mengurangi stok barang di gudang, lakukan di sini
+
+        // Hapus transaksi dari antrean
+        free(t);  // Bebaskan memori transaksi yang telah diproses
+    } else {
+        printf("Tidak ada transaksi dalam antrean.\n");
     }
+
+    printf("Tekan Enter untuk kembali ke menu...");
+    getchar(); // Tunggu hingga pengguna menekan Enter
 }
