@@ -37,8 +37,8 @@ typedef struct barang{
 } barang;
 
 typedef struct Stack {
-    barang* box;             // Box yang disimpan di gudang
-    struct Stack* next;   // Pointer untuk stack
+    barang* box;             
+   struct Stack* next;   
 } Stack;
 
 typedef struct transaksi{
@@ -271,7 +271,7 @@ void ubahData(barang **head){
 
     system("cls");
 
-    //Tampilkan daftra nama yang tersedia
+    //Tampilkan daftar nama yang tersedia
     printf("Daftar nama barang yang tersedia:\n");
     while (PCur != NULL) {
         printf("- %s\n", PCur->namabarang);
@@ -438,7 +438,7 @@ void tampilData (barang **head) {
     int ditemukan = 0;
 
     while (pCur != NULL) {
-        if (strcmp(pCur->namabarang, namaBarang) == 0) { //Bandingkan nama
+        if (strcmp(pCur->namabarang, namaBarang) == 0) { 
             printf("Barang ditemukan:\n");
             printf("Nama Barang     : %s\n", pCur->namabarang);
             printf("Kategori        : %s\n", pCur->kategori);
@@ -455,7 +455,7 @@ void tampilData (barang **head) {
         printf("Barang dengan nama '%s' tidak ditemukan.\n", namaBarang);
     }
 
-    getchar(); //Tunggu input sebelum kembali
+    getchar(); 
 }
 
 //========================================================
@@ -494,7 +494,7 @@ void pindahKeGudang(barang **head, Stack** gudang) {
         printf("Daftar Barang Yang Tersedia: \n");
 
         printf("Daftar nama barang yang tersedia: \n");
-        barang *pCur = *head; //ini adalah deklarasi var.pCur
+        barang *pCur = *head; 
         while (pCur != NULL) {
             printf("- %s\n", pCur->namabarang);
             pCur = pCur->next;
@@ -508,7 +508,7 @@ void pindahKeGudang(barang **head, Stack** gudang) {
         fgets(nama, sizeof(nama), stdin);
         nama[strcspn(nama, "\n")] = '\0';
 
-        pCur = *head;
+        pCur = *head;S
         barang* prev = NULL;
 
         //cari barang sesuai nama
@@ -584,7 +584,7 @@ barang* pop(Stack** stack) {
 }
 
 //========================================================
-//FUNGSI QUEUE  //lucky
+//FUNGSI QUEUE  
 
 void initqueue(queue** q) {
     *q = (queue*)malloc(sizeof(queue));
@@ -653,7 +653,7 @@ void tambahTransaksi(queue* q, Stack** gudang){
     //memilih barang dan jumlahnya
     printf("Masukkan jumlah barang yang ingin dibeli: ");
     scanf("%d", &jumlahBarangDipilih);
-    getchar(); //mengkonsumsi newline dari input sebelumnya
+    getchar(); 
 
     for (int i = 0; i < jumlahBarangDipilih; i++) {
         char namaBarang[100];
@@ -683,7 +683,7 @@ void tambahTransaksi(queue* q, Stack** gudang){
 
         //barang ditemukan, simpan ke dalam daftar barang
         barangDipilih[i] = gudangTemp->box;
-        jumlah[i] = 1; //hanya satu barang yang dipilih
+        jumlah[i] = 1; 
         totalHarga += gudangTemp->box->harga;
 
         //hapus barang dari stack
@@ -707,7 +707,7 @@ void tambahTransaksi(queue* q, Stack** gudang){
 
     //membuat satu node transaksi untuk semua barang yang dipilih
     transaksi* newTransaksi = (transaksi*)malloc(sizeof(transaksi));
-    newTransaksi->item = (barang*)malloc(sizeof(barang) * jumlahBarangDipilih); //alokasi array barang
+    newTransaksi->item = (barang*)malloc(sizeof(barang) * jumlahBarangDipilih); 
     for (int i = 0; i < jumlahBarangDipilih; i++){
         newTransaksi->item[i] = *barangDipilih[i];
     }
@@ -727,9 +727,9 @@ void tambahTransaksi(queue* q, Stack** gudang){
     //menghitung posisi antrean saat ini
     int posisiAntrean = 1;
     if (q->rear != NULL) {
-        posisiAntrean = q->rear->antrean + 1; //menentukan nomor antream berikutnya
+        posisiAntrean = q->rear->antrean + 1; 
     }
-    newTransaksi->antrean = posisiAntrean; //set nomor antrean
+    newTransaksi->antrean = posisiAntrean; 
 
     //tambahkan transaksi ke antrean
     if (q->rear == NULL) {
@@ -744,7 +744,7 @@ void tambahTransaksi(queue* q, Stack** gudang){
     printf("Total harga: %.2f\n", totalHarga);
     printf("Transaksi telah dimasukkan ke dalam antrean pada posisi ke-%d.\n", posisiAntrean);
     printf("Tekan Enter untuk kembali ke menu...");
-    getchar(); //tunggu sampai pengguna menekan Enter
+    getchar(); 
 }
 
 
@@ -756,10 +756,10 @@ void tampilJumlahTransaksi(queue* q){
     if (q->front == NULL) {
         printf("Tidak ada transaksi yang terjadi.\n");
         printf("Tekan Enter untuk kembali ke menu..");
-        getchar(); //tunggu hingga pengguna menekan Enter
+        getchar(); 
         return;
     }
-    int count = 0; //Untuk menghitung jumlah total transaksi
+    int count = 0; 
     transaksi* temp = q->front;
 
     //Iterasi semua transaksi dalam antrean
@@ -770,7 +770,7 @@ void tampilJumlahTransaksi(queue* q){
     
     printf("Jumlah transaksi yang terjadi: %d\n", count);
     printf("Tekan Enter untuk kembali ke menu...");
-    getchar(); //tunggu hingga pengguna menekan Enter
+    getchar(); 
 }
 
 
@@ -793,7 +793,7 @@ void tampilkanAntrean(queue* q) {
         // Validasi data barang untuk mencegah error
         if (temp->item != NULL){
             printf("  Barang  :\n");
-            for (int i = 0; i < temp->jumlah; i++){ //Loop untuk menampilkan semua barang
+            for (int i = 0; i < temp->jumlah; i++){ 
                 if (temp->item[i].namabarang != NULL) {
                     printf("    - %s\n", temp->item[i].namabarang);
                 } else {
@@ -857,8 +857,8 @@ void tampilkanAntreanTerakhir(queue* q) {
     // Periksa apakah antrean kosong
     if (q->rear == NULL) {
         printf("Tidak ada antrean saat ini.\n");
-        getchar(); // Ganti getch() dengan getchar()
-        return; // Pastikan fungsi keluar jika antrean kosong
+        getchar(); 
+        return; 
     }
 
     // Pastikan data valid sebelum menampilkan
@@ -873,7 +873,7 @@ void tampilkanAntreanTerakhir(queue* q) {
     }
 
     printf("Tekan Enter untuk kembali ke menu...");
-    getchar(); // Tunggu hingga pengguna menekan Enter
+    getchar(); 
 }
 
 
@@ -884,7 +884,7 @@ void tampilkanJumlahAntrean(queue* q) {
     system("cls");
     if (q->front == NULL) {
         printf("Antrian kosong.\n");
-        getchar();  // Menggunakan getchar() agar program menunggu input Enter
+        getchar();  
         return;
     }
     
@@ -899,7 +899,7 @@ void tampilkanJumlahAntrean(queue* q) {
 
     printf("Jumlah antrian: %d\n", count);
     printf("Tekan Enter untuk kembali ke menu...");
-    getchar();  // Menunggu input Enter agar pengguna bisa melihat jumlah antrean
+    getchar();  
 }
 
 
@@ -934,11 +934,11 @@ void kirimBoxDalamAntrian(queue* q) {
                 t->antrean, t->item->namabarang, t->jumlah, t->totalprice);
 
         // Hapus transaksi dari antrean
-        free(t);  // Bebaskan memori transaksi yang telah diproses
+        free(t);  
     } else {
         printf("Tidak ada transaksi dalam antrean.\n");
     }
 
     printf("Tekan Enter untuk kembali ke menu...");
-    getchar(); // Tunggu hingga pengguna menekan Enter
+    getchar(); 
 }
